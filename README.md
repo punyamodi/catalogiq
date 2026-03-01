@@ -4,6 +4,26 @@
 
 ---
 
+## Screenshots
+
+| Home | Analyze |
+|---|---|
+| ![Home page](docs/screenshots/home.png) | ![Analyze page](docs/screenshots/analyze.png) |
+
+| Results — Score Dashboard | Results — Issues & Recommendations |
+|---|---|
+| ![Results top](docs/screenshots/results.png) | ![Results detail](docs/screenshots/results.png) |
+
+| Analysis History | Side-by-Side Comparison |
+|---|---|
+| ![History page](docs/screenshots/history.png) | ![Compare page](docs/screenshots/compare.png) |
+
+| Settings |
+|---|
+| ![Settings page](docs/screenshots/settings.png) |
+
+---
+
 ## Features
 
 - **Multi-dimensional scoring** — Content Quality, Readability, Structure, Product Information, and Formatting, each scored 0–100
