@@ -173,7 +173,7 @@ catalogiq/
 
 ## Origin
 
-This project is a complete rewrite of the original [Catalouge-Scorer](https://github.com/punyamodi/Catalouge-Scorer/tree/legacy) Streamlit prototype. The original single-file app used PyPDF2 and Mistral-7B on HuggingFace. The legacy code is preserved on the [`legacy`](https://github.com/punyamodi/Catalouge-Scorer/tree/legacy) branch.
+This project is a complete rewrite of the original Catalouge-Scorer Streamlit prototype. The original single-file app used PyPDF2 and Mistral-7B on HuggingFace. The legacy code is preserved on the [`legacy`](https://github.com/punyamodi/catalogiq/tree/legacy) branch.
 
 ---
 
