@@ -1,40 +1,88 @@
-# CatalogIQ
+# CatalogIQ — AI Catalog Quality Scorer
 
-**AI-powered catalog quality analysis platform.** Upload any PDF catalog and receive a detailed quality score across five dimensions — with issue reports, recommendations, and side-by-side comparison.
+<div align="center">
+
+**Instantly score and improve your product catalogs using AI.**
+Upload any PDF, get a detailed quality breakdown across five dimensions, and export a full report.
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![LangChain](https://img.shields.io/badge/LangChain-0.2-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+</div>
+
+---
+
+## What It Does
+
+CatalogIQ reads a PDF catalog and uses an LLM to evaluate it across five independent quality dimensions. Each dimension receives a score from 0–100. The platform identifies specific issues (ranked by severity), lists concrete recommendations, and generates a downloadable PDF report — all in one workflow.
+
+Works with **HuggingFace** (free), **OpenAI**, or a **local Ollama** instance.
 
 ---
 
 ## Screenshots
 
-| Home | Analyze |
-|---|---|
-| ![Home page](docs/screenshots/home.png) | ![Analyze page](docs/screenshots/analyze.png) |
-
-| Results — Score Dashboard | Results — Issues & Recommendations |
-|---|---|
-| ![Results top](docs/screenshots/results.png) | ![Results detail](docs/screenshots/results.png) |
-
-| Analysis History | Side-by-Side Comparison |
-|---|---|
-| ![History page](docs/screenshots/history.png) | ![Compare page](docs/screenshots/compare.png) |
-
-| Settings |
-|---|
-| ![Settings page](docs/screenshots/settings.png) |
+<table>
+  <tr>
+    <td align="center"><b>Home</b></td>
+    <td align="center"><b>Upload & Analyze</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/home.png" alt="Home page" width="100%"/></td>
+    <td><img src="docs/screenshots/analyze.png" alt="Analyze page" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Results Dashboard</b></td>
+    <td align="center"><b>Analysis History</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/results.png" alt="Results page" width="100%"/></td>
+    <td><img src="docs/screenshots/history.png" alt="History page" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Side-by-Side Comparison</b></td>
+    <td align="center"><b>Settings</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/compare.png" alt="Compare page" width="100%"/></td>
+    <td><img src="docs/screenshots/settings.png" alt="Settings page" width="100%"/></td>
+  </tr>
+</table>
 
 ---
 
 ## Features
 
-- **Multi-dimensional scoring** — Content Quality, Readability, Structure, Product Information, and Formatting, each scored 0–100
-- **Radar and bar charts** — Visual score breakdowns that make weaknesses immediately obvious
-- **Issue reports** — Severity-ranked issues (High / Medium / Low) with actionable fix suggestions
-- **Analysis history** — Every run is stored in SQLite; browse, revisit, and delete past analyses
-- **Catalog comparison** — Select any two analyses from history and compare them side by side
-- **PDF report export** — Download a full report as a formatted PDF
-- **Multiple LLM providers** — Works with HuggingFace (default), OpenAI GPT, or a local Ollama instance
-- **Drag-and-drop upload** — PDF files up to 50 MB
-- **Docker support** — Spin up the full stack with a single command
+| Feature | Details |
+|---|---|
+| **5-Dimension AI Scoring** | Content Quality, Readability, Structure, Product Information, and Formatting — each 0–100 |
+| **Issue Detection** | Severity-ranked issues (High / Medium / Low) with a targeted fix suggestion for each |
+| **Visual Dashboards** | Circular score gauge, radar chart, and bar chart generated client-side |
+| **Catalog Comparison** | Select any two past analyses and get a dimension-level diff with a winner |
+| **PDF Report Export** | Download a formatted ReportLab report with scores, issues, and recommendations |
+| **Analysis History** | Every run persisted in SQLite — browse, re-read, or delete any time |
+| **Multi-Provider LLM** | Swap between HuggingFace, OpenAI GPT, or Ollama with a single env variable |
+| **Drag-and-Drop Upload** | PDF files up to 50 MB, validated before processing |
+| **Docker Support** | Spin up frontend + backend in one `docker-compose up` |
+| **REST API + Swagger** | Full API at `/api` with interactive docs at `/api/docs` |
+
+---
+
+## Scoring Dimensions
+
+```
+Content Quality      — Grammar, factual accuracy, completeness of information
+Readability          — Sentence clarity, language accessibility, reading ease
+Structure & Org.     — Logical flow, section hierarchy, consistent categorization
+Product Information  — Specs, pricing, SKUs, dimensions, and descriptions
+Formatting Quality   — Visual consistency, layout coherence, typographic uniformity
+```
+
+The overall score is the equal-weighted mean of the five dimensions.
 
 ---
 
@@ -42,64 +90,56 @@
 
 ```mermaid
 graph TD
-    A[Browser] -->|REST| B[FastAPI Backend]
-    B --> C[pdfplumber\nPDF Extraction]
-    B --> D[LLM Analyzer\nHuggingFace / OpenAI / Ollama]
-    B --> E[SQLite Database]
-    B --> F[ReportLab\nPDF Reports]
-    A --> G[React + Vite\nTailwind CSS]
-    G --> A
+    Browser -->|HTTP / REST| API[FastAPI Backend]
+    API --> PDF[pdfplumber — text extraction]
+    API --> LLM[LangChain — HuggingFace / OpenAI / Ollama]
+    API --> DB[(SQLite — analysis history)]
+    API --> Report[ReportLab — PDF reports]
+    Browser --> UI[React 18 + Vite + Tailwind CSS]
+    UI --> Charts[Recharts — radar, bar, gauge]
 ```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, Vite, Tailwind CSS, Recharts, React Router v6 |
-| Backend | FastAPI, SQLAlchemy, Pydantic v2, Python 3.11 |
-| PDF Processing | pdfplumber |
-| AI Analysis | LangChain, HuggingFace / OpenAI / Ollama |
-| Report Generation | ReportLab |
-| Database | SQLite |
-| Containerization | Docker, Docker Compose |
+| Layer | Technology | Version |
+|---|---|---|
+| Frontend | React, Vite, Tailwind CSS | 18 / 5 / 3.4 |
+| Charts | Recharts | 2.12 |
+| Routing | React Router | v6 |
+| HTTP Client | Axios | 1.7 |
+| File Upload | react-dropzone | 14 |
+| Backend | FastAPI, Uvicorn | 0.111 / 0.29 |
+| ORM | SQLAlchemy, Pydantic v2 | 2.0 / 2.7 |
+| PDF Parsing | pdfplumber | 0.11 |
+| AI / LLM | LangChain + providers | 0.2 |
+| Reports | ReportLab | 4.1 |
+| Database | SQLite | — |
+| Containers | Docker, Compose | — |
 
 ---
 
-## Scoring Dimensions
+## Quick Start
 
-| Dimension | What is evaluated |
-|---|---|
-| Content Quality | Grammar, factual accuracy, completeness of written content |
-| Readability | Sentence clarity, language accessibility, reading ease |
-| Structure & Organization | Logical flow, section hierarchy, categorization |
-| Product Information | Completeness of specs, pricing, descriptions, SKUs |
-| Formatting Quality | Visual consistency, layout coherence, typographic uniformity |
+### Requirements
 
----
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.11+
+- Python 3.8+
 - Node.js 20+
-- A HuggingFace API token (free) **or** an OpenAI key **or** a running Ollama instance
+- A free [HuggingFace token](https://huggingface.co/settings/tokens) **or** an OpenAI key **or** a running [Ollama](https://ollama.com/) instance
 
-### Backend setup
+### 1 — Backend
 
 ```bash
 cd backend
-cp .env.example .env
-# Edit .env and add your HUGGINGFACE_API_TOKEN
+cp .env.example .env        # then edit .env and add your token
 pip install -r requirements.txt
 python run.py
 ```
 
-The API will be available at `http://localhost:8000`. Interactive docs at `http://localhost:8000/docs`.
+API ready at **http://localhost:8000** — interactive docs at **http://localhost:8000/docs**
 
-### Frontend setup
+### 2 — Frontend
 
 ```bash
 cd frontend
@@ -107,36 +147,33 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+Open **http://localhost:5173**
 
-### Docker (full stack)
+### 3 — Docker (full stack)
 
 ```bash
-cp backend/.env.example backend/.env
-# Add your API token to backend/.env
+cp backend/.env.example backend/.env   # add your token
 docker-compose up --build
 ```
-
-Frontend: `http://localhost:5173` | Backend: `http://localhost:8000`
 
 ---
 
 ## LLM Configuration
 
-Edit `backend/.env` to switch providers:
+Edit `backend/.env` to choose a provider:
 
 ```env
-# HuggingFace (default, free tier available)
+# HuggingFace  (default — free tier available)
 LLM_PROVIDER=huggingface
-HUGGINGFACE_API_TOKEN=hf_your_token_here
+HUGGINGFACE_API_TOKEN=hf_xxxxxxxxxxxxxxxx
 HUGGINGFACE_MODEL=mistralai/Mistral-7B-Instruct-v0.2
 
 # OpenAI
 LLM_PROVIDER=openai
-OPENAI_API_KEY=sk-your_key_here
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
 OPENAI_MODEL=gpt-3.5-turbo
 
-# Ollama (local, no API key required)
+# Ollama  (fully local, no API key needed)
 LLM_PROVIDER=ollama
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=llama2
@@ -148,43 +185,57 @@ OLLAMA_MODEL=llama2
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/analyses/` | Upload and analyze a PDF |
-| `GET` | `/api/analyses/` | List all past analyses |
-| `GET` | `/api/analyses/{id}` | Get a specific analysis |
+| `POST` | `/api/analyses/` | Upload a PDF and run an analysis |
+| `GET` | `/api/analyses/` | List all analyses (paginated) |
+| `GET` | `/api/analyses/{id}` | Retrieve a full analysis result |
 | `DELETE` | `/api/analyses/{id}` | Delete an analysis |
-| `POST` | `/api/analyses/compare` | Compare two analyses |
-| `GET` | `/api/analyses/{id}/report` | Download PDF report |
-| `GET` | `/api/health` | Health check |
-| `GET` | `/api/config` | Active configuration |
+| `POST` | `/api/analyses/compare` | Compare two analyses side-by-side |
+| `GET` | `/api/analyses/{id}/report` | Download analysis as a PDF report |
+| `GET` | `/api/health` | Backend health and version |
+| `GET` | `/api/config` | Active LLM provider and settings |
 
-Full interactive docs available at `http://localhost:8000/docs` when the backend is running.
+Full interactive Swagger UI at `http://localhost:8000/docs`.
 
 ---
 
 ## Project Structure
 
 ```
-catalogiq/
+catalog-quality-scorer/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              FastAPI app and middleware
-│   │   ├── config.py            Settings and environment variables
-│   │   ├── database.py          SQLAlchemy engine and session
-│   │   ├── models/analysis.py   Database model
-│   │   ├── schemas/analysis.py  Pydantic request/response schemas
-│   │   ├── api/routes/          API route handlers
-│   │   └── services/            PDF extraction, LLM analysis, reporting
+│   │   ├── main.py               FastAPI application and CORS setup
+│   │   ├── config.py             Pydantic-settings — all env variables
+│   │   ├── database.py           SQLAlchemy engine and session factory
+│   │   ├── models/analysis.py    ORM model for stored analyses
+│   │   ├── schemas/analysis.py   Request / response Pydantic schemas
+│   │   ├── api/routes/
+│   │   │   ├── analysis.py       CRUD + compare + report endpoints
+│   │   │   └── health.py         Health and config endpoints
+│   │   └── services/
+│   │       ├── pdf_service.py    pdfplumber text and metadata extraction
+│   │       ├── analyzer.py       LLM prompt, JSON parsing, score clamping
+│   │       └── report_service.py ReportLab PDF report generation
 │   ├── requirements.txt
 │   ├── .env.example
+│   ├── Dockerfile
 │   └── run.py
 ├── frontend/
 │   ├── src/
-│   │   ├── pages/               Home, Analyze, Results, History, Compare, Settings
-│   │   ├── components/          Layout, Upload, Charts, Analysis, History, Compare
-│   │   ├── services/api.js      Axios API client
-│   │   └── utils/helpers.js     Formatting and scoring utilities
+│   │   ├── pages/                Home  Analyze  Results  History  Compare  Settings
+│   │   ├── components/
+│   │   │   ├── analysis/         ScoreCard  ScoreChart  AnalysisDetails  IssuesList
+│   │   │   ├── compare/          CompareView with diff table
+│   │   │   ├── history/          HistoryTable with select-to-compare
+│   │   │   ├── layout/           Navbar  Layout
+│   │   │   └── upload/           UploadZone (react-dropzone)
+│   │   ├── services/api.js       Axios API client
+│   │   └── utils/helpers.js      Score colours, grades, formatters
 │   ├── package.json
-│   └── vite.config.js
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   ├── Dockerfile
+│   └── nginx.conf
 ├── docker-compose.yml
 └── README.md
 ```
@@ -193,10 +244,11 @@ catalogiq/
 
 ## Origin
 
-This project is a complete rewrite of the original Catalouge-Scorer Streamlit prototype. The original single-file app used PyPDF2 and Mistral-7B on HuggingFace. The legacy code is preserved on the [`legacy`](https://github.com/punyamodi/catalogiq/tree/legacy) branch.
+Complete rewrite of the original [Catalouge-Scorer](https://github.com/punyamodi/catalog-quality-scorer/tree/legacy) Streamlit prototype (single-file, PyPDF2, Mistral-7B). Legacy code preserved on the [`legacy`](https://github.com/punyamodi/catalog-quality-scorer/tree/legacy) branch.
 
 ---
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
