@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - catalog_data:/app/data
+    environment:
+      - LLM_PROVIDER=huggingface
+      - HUGGINGFACE_API_TOKEN=${HUGGINGFACE_API_TOKEN}
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  catalog_data:
